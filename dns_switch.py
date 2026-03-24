@@ -3,6 +3,7 @@
 DNS Switch TUI - A user-friendly DNS configuration switcher
 """
 
+import argparse
 import subprocess
 import sys
 import yaml
@@ -15,6 +16,8 @@ from textual.widgets import Header, Footer, Static, Button, ListView, ListItem, 
 from textual.binding import Binding
 from textual.screen import Screen
 from textual import on
+
+__version__ = "1.0.0"
 
 
 class DNSProfile:
@@ -508,6 +511,39 @@ class DNSSwitchApp(App):
 
 def main():
     """Main entry point"""
+    parser = argparse.ArgumentParser(
+        prog="dns-switch",
+        description="A user-friendly TUI for quickly switching between DNS configurations",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  dns-switch              Launch the TUI
+  dns-switch --help       Show this help message
+  dns-switch --version    Show version information
+
+Configuration:
+  Default config location: ~/.config/dns-switch/config.yaml
+
+Keyboard Shortcuts:
+  Arrow Keys / Mouse      Navigate through DNS profiles
+  Enter / Apply Button    Apply selected DNS profile
+  c                       Check current DNS configuration
+  i                       Change network interface
+  r                       Refresh configuration
+  q                       Quit application
+
+Note: Requires sudo to modify network settings
+      """
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}"
+    )
+
+    args = parser.parse_args()
+
+    # If we get here, no flags were provided, so launch the TUI
     app = DNSSwitchApp()
     app.run()
 
