@@ -4,7 +4,7 @@ class DnsSwitch < Formula
   desc "User-friendly TUI for quickly switching between DNS configurations"
   homepage "https://github.com/pinaka-io/dns-switch"
   url "https://github.com/pinaka-io/dns-switch/archive/refs/tags/v1.0.0.tar.gz"
-  sha256 "" # Will be filled after creating the release
+  sha256 "06fa83fed21d4259c64629235d093bedc80e1e6d80978f1ea1f1a4eeaeae789f"
   license "MIT"
 
   depends_on "python@3.11"
