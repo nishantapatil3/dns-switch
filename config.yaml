@@ -1,0 +1,49 @@
+# DNS Switch Configuration
+# Add your DNS profiles here
+
+dns_profiles:
+  # Adguard DNS
+  adguard:
+    name: "AdGuard DNS"
+    description: "AdGuard DNS for blocking ads and trackers"
+    primary: "192.168.4.69" # replace with your AdGuard DNS IP
+    secondary: ""
+
+  # Cloudflare DNS
+  cloudflare:
+    name: "Cloudflare (1.1.1.1)"
+    description: "Fast and privacy-focused DNS"
+    primary: "1.1.1.1"
+    secondary: "1.0.0.1"
+
+  # Google DNS
+  google:
+    name: "Google Public DNS"
+    description: "Reliable DNS by Google"
+    primary: "8.8.8.8"
+    secondary: "8.8.4.4"
+
+  # Quad9 DNS
+  quad9:
+    name: "Quad9 (Security)"
+    description: "DNS with malware blocking"
+    primary: "9.9.9.9"
+    secondary: "149.112.112.112"
+
+  # OpenDNS
+  opendns:
+    name: "OpenDNS"
+    description: "Fast and reliable DNS"
+    primary: "208.67.222.222"
+    secondary: "208.67.220.220"
+
+  # DHCP (Automatic)
+  dhcp:
+    name: "DHCP (Automatic)"
+    description: "Use DNS provided by your network"
+    primary: "auto"
+    secondary: "auto"
+
+# Network interface to configure (e.g., "Wi-Fi", "Ethernet", "en0")
+# Leave empty to show a list of available interfaces
+network_interface: ""
