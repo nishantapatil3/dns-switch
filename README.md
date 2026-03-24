@@ -14,38 +14,36 @@ A user-friendly Terminal User Interface (TUI) application for quickly switching 
 
 ## Installation
 
-### Option 1: Homebrew (Recommended for macOS)
+### Recommended: pipx (Isolated Installation)
+
+[pipx](https://pipx.pypa.io/) installs the application in an isolated environment:
 
 ```bash
-# Add the tap
-brew tap pinaka-io/tap
+# Install pipx if you haven't already
+brew install pipx  # macOS
+# or: python3 -m pip install --user pipx
 
 # Install dns-switch
-brew install dns-switch
+pipx install dns-switch
 
-# Run with sudo
+# Run
 sudo dns-switch
 ```
 
-### Option 2: pip install
+### Alternative: pip
 
 ```bash
 pip install dns-switch
 sudo dns-switch
 ```
 
-### Option 3: From source
+### From Source
 
-1. Install Python 3.8 or higher
-
-2. Install dependencies:
 ```bash
-pip install -r requirements.txt
-```
-
-Or install directly:
-```bash
-pip install textual pyyaml
+git clone https://github.com/pinaka-io/dns-switch.git
+cd dns-switch
+pip install -e .
+sudo dns-switch
 ```
 
 ## Configuration
@@ -78,17 +76,9 @@ dns_profiles:
 
 ## Usage
 
-### Basic Usage
-
-Run the application:
+Run the application with sudo:
 ```bash
-python dns_switch.py
-```
-
-Or make it executable:
-```bash
-chmod +x dns_switch.py
-./dns_switch.py
+sudo dns-switch
 ```
 
 ### Keyboard Shortcuts
@@ -109,21 +99,21 @@ chmod +x dns_switch.py
 
 ## Permissions
 
-### macOS
+The application requires administrator privileges to modify DNS settings:
 
-The application uses `networksetup` which requires administrator privileges:
+### macOS
+Uses `networksetup` command (requires sudo):
 ```bash
-sudo python dns_switch.py
+sudo dns-switch
 ```
 
 ### Linux
-
-The application uses `nmcli` which may require sudo:
+Uses `nmcli` command (may require sudo):
 ```bash
-sudo python dns_switch.py
+sudo dns-switch
 ```
 
-Alternatively, configure sudo to allow nmcli without password for your user:
+**Optional:** Configure sudo to avoid password prompt:
 ```bash
 sudo visudo
 # Add this line (replace USERNAME):
