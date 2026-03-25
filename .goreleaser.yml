@@ -1,0 +1,127 @@
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: dns-switch
+    main: ./cmd/dns-switch
+    binary: dns-switch
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+
+archives:
+  - id: default
+    format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}-
+      {{- .Os }}-
+      {{- .Arch }}
+    files:
+      - none*
+
+checksum:
+  name_template: 'checksums.txt'
+  algorithm: sha256
+
+release:
+  github:
+    owner: pinaka-io
+    name: dns-switch
+  draft: false
+  prerelease: auto
+  mode: append
+  name_template: "{{.Tag}}"
+  header: |
+    ## DNS Switch {{.Version}}
+
+    Fast, user-friendly TUI for quickly switching between DNS configurations.
+  footer: |
+    ### Installation
+
+    #### Homebrew (macOS/Linux)
+    ```bash
+    brew tap pinaka-io/tap
+    brew install dns-switch
+    ```
+
+    #### Manual Installation
+
+    Download the appropriate binary for your platform from the assets above.
+
+    **macOS (Apple Silicon):**
+    ```bash
+    curl -LO https://github.com/pinaka-io/dns-switch/releases/download/{{.Tag}}/dns-switch-darwin-arm64.tar.gz
+    tar xzf dns-switch-darwin-arm64.tar.gz
+    sudo mv dns-switch /usr/local/bin/
+    sudo chmod +x /usr/local/bin/dns-switch
+    ```
+
+    **macOS (Intel):**
+    ```bash
+    curl -LO https://github.com/pinaka-io/dns-switch/releases/download/{{.Tag}}/dns-switch-darwin-amd64.tar.gz
+    tar xzf dns-switch-darwin-amd64.tar.gz
+    sudo mv dns-switch /usr/local/bin/
+    sudo chmod +x /usr/local/bin/dns-switch
+    ```
+
+    **Linux (amd64):**
+    ```bash
+    curl -LO https://github.com/pinaka-io/dns-switch/releases/download/{{.Tag}}/dns-switch-linux-amd64.tar.gz
+    tar xzf dns-switch-linux-amd64.tar.gz
+    sudo mv dns-switch /usr/local/bin/
+    sudo chmod +x /usr/local/bin/dns-switch
+    ```
+
+    **Linux (arm64):**
+    ```bash
+    curl -LO https://github.com/pinaka-io/dns-switch/releases/download/{{.Tag}}/dns-switch-linux-arm64.tar.gz
+    tar xzf dns-switch-linux-arm64.tar.gz
+    sudo mv dns-switch /usr/local/bin/
+    sudo chmod +x /usr/local/bin/dns-switch
+    ```
+
+    ### Verify Checksums
+    ```bash
+    curl -LO https://github.com/pinaka-io/dns-switch/releases/download/{{.Tag}}/checksums.txt
+    sha256sum -c checksums.txt
+    ```
+
+brews:
+  - repository:
+      owner: pinaka-io
+      name: homebrew-tap
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
+    folder: Formula
+    homepage: "https://github.com/pinaka-io/dns-switch"
+    description: "Fast, user-friendly TUI for quickly switching between DNS configurations"
+    license: "MIT"
+    test: |
+      system "#{bin}/dns-switch --version"
+    caveats: |
+      DNS Switch requires sudo to modify network settings:
+        sudo dns-switch
+
+      Configuration file location:
+        ~/.config/dns-switch/config.yaml
+
+changelog:
+  use: github
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^ci:'
+      - Merge pull request
+      - Merge branch

@@ -9,7 +9,7 @@ import (
 	"github.com/pinaka-io/dns-switch/internal/tui"
 )
 
-const version = "1.0.1"
+var version = "dev" // Set by GoReleaser via ldflags
 
 func main() {
 	// Check for version flag
