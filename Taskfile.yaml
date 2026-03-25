@@ -1,41 +1,94 @@
 version: '3'
 
+vars:
+  BINARY_NAME: dns-switch
+  INSTALL_PATH: /usr/local/bin
+
 tasks:
-  setup:
-    desc: Set up development environment
+  default:
+    desc: Show available tasks
     cmds:
-      - python3 -m venv .venv
-      - .venv/bin/pip install -e .
-
-  run:
-    desc: Run dns-switch locally
-    cmds:
-      - sudo .venv/bin/python dns_switch.py
-
-  install:
-    desc: Install locally with pip
-    cmds:
-      - pip install -e .
+      - task --list
 
   build:
-    desc: Build distribution packages
+    desc: Build the binary
     cmds:
-      - python -m pip install --upgrade build
-      - python -m build
+      - go build -o {{.BINARY_NAME}} ./cmd/dns-switch
+    sources:
+      - "cmd/**/*.go"
+      - "internal/**/*.go"
+      - go.mod
+      - go.sum
+    generates:
+      - "{{.BINARY_NAME}}"
+
+  install:
+    desc: Install the binary to /usr/local/bin
+    deps: [build]
+    cmds:
+      - sudo cp {{.BINARY_NAME}} {{.INSTALL_PATH}}/{{.BINARY_NAME}}
+      - sudo chmod +x {{.INSTALL_PATH}}/{{.BINARY_NAME}}
+      - echo "Installed to {{.INSTALL_PATH}}/{{.BINARY_NAME}}"
+
+  run:
+    desc: Build and run the application
+    deps: [build]
+    cmds:
+      - sudo ./{{.BINARY_NAME}}
 
   clean:
     desc: Clean build artifacts
     cmds:
-      - rm -rf build/ dist/ *.egg-info
-      - find . -type d -name __pycache__ -exec rm -rf {} +
-      - find . -type f -name "*.pyc" -delete
+      - go clean
+      - rm -f {{.BINARY_NAME}}
+      - echo "Cleaned build artifacts"
 
-  test-install:
-    desc: Test pipx installation from local source
+  test:
+    desc: Run tests
     cmds:
-      - pipx install --force .
+      - go test -v ./...
+
+  fmt:
+    desc: Format code
+    cmds:
+      - go fmt ./...
+
+  vet:
+    desc: Run go vet
+    cmds:
+      - go vet ./...
+
+  lint:
+    desc: Run linter (requires golangci-lint)
+    cmds:
+      - golangci-lint run
+    preconditions:
+      - sh: command -v golangci-lint
+        msg: "golangci-lint is not installed. Install with: brew install golangci-lint"
+
+  deps:
+    desc: Download and tidy dependencies
+    cmds:
+      - go mod download
+      - go mod tidy
+      - echo "Dependencies updated"
 
   uninstall:
-    desc: Uninstall from pipx
+    desc: Uninstall the binary
     cmds:
-      - pipx uninstall dns-switch
+      - sudo rm -f {{.INSTALL_PATH}}/{{.BINARY_NAME}}
+      - echo "Uninstalled from {{.INSTALL_PATH}}/{{.BINARY_NAME}}"
+
+  dev:
+    desc: Run in development mode (build + run)
+    cmds:
+      - task: build
+      - task: run
+
+  check:
+    desc: Run all checks (fmt, vet, test)
+    cmds:
+      - task: fmt
+      - task: vet
+      - task: test
+      - echo "All checks passed!"

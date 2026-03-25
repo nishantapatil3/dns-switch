@@ -1,61 +1,91 @@
 # DNS Switch TUI
 
-A user-friendly Terminal User Interface (TUI) application for quickly switching between different DNS configurations.
+A fast, user-friendly Terminal User Interface (TUI) for quickly switching between different DNS configurations. Written in Go with [Bubble Tea](https://github.com/charmbracelet/bubbletea).
 
 ## Features
 
-- 🎨 Beautiful, intuitive TUI built with Textual
-- 🚀 Quick DNS profile switching
-- ⚙️ YAML-based configuration
+- 🎨 Beautiful, intuitive TUI built with Bubble Tea
+- 🚀 Quick DNS profile switching with real-time status updates
+- ⚙️ YAML-based configuration with automatic alphabetical sorting
 - 🔄 Support for multiple network interfaces
 - 🍎 macOS support (using `networksetup`)
 - 🐧 Linux support (using `nmcli`)
-- 📋 Pre-configured popular DNS providers (Cloudflare, Google, Quad9, OpenDNS)
+- 📋 Pre-configured popular DNS providers (Cloudflare, Google, Quad9, OpenDNS, AdGuard)
+- ⚡ Fast and lightweight (single binary, no runtime dependencies)
+- 🎯 Consistent display - profiles always shown in alphabetical order
+- 🔍 Check current DNS configuration with one keystroke
 
 ## Installation
 
-### Recommended: pipx
-
-[pipx](https://pipx.pypa.io/) installs the application in an isolated environment:
+### Using Go Install
 
 ```bash
-# Install pipx if you haven't already
-brew install pipx  # macOS
-# or: python3 -m pip install --user pipx
-
-# Install dns-switch from GitHub
-pipx install git+https://github.com/pinaka-io/dns-switch.git
+go install github.com/pinaka-io/dns-switch@latest
 
 # Run
 sudo dns-switch
 ```
 
-### Alternative: pip
-
-```bash
-pip install git+https://github.com/pinaka-io/dns-switch.git
-sudo dns-switch
-```
-
-### Install Specific Version
-
-```bash
-# Install a specific release tag
-pipx install git+https://github.com/pinaka-io/dns-switch.git@v1.0.0
-```
-
-### Development Installation
+### Build from Source
 
 ```bash
 git clone https://github.com/pinaka-io/dns-switch.git
 cd dns-switch
-pip install -e .
-sudo dns-switch
+
+# Using Task (recommended)
+task build
+task install
+
+# Or build directly with Go
+go build -o dns-switch .
+sudo mv dns-switch /usr/local/bin/
+
+# Run directly
+task run
+```
+
+### Download Binary
+
+Download the latest binary from the [releases page](https://github.com/pinaka-io/dns-switch/releases):
+
+**Linux (amd64):**
+```bash
+curl -LO https://github.com/pinaka-io/dns-switch/releases/latest/download/dns-switch-linux-amd64.tar.gz
+tar xzf dns-switch-linux-amd64.tar.gz
+sudo mv dns-switch-linux-amd64 /usr/local/bin/dns-switch
+sudo chmod +x /usr/local/bin/dns-switch
+```
+
+**macOS (Apple Silicon):**
+```bash
+curl -LO https://github.com/pinaka-io/dns-switch/releases/latest/download/dns-switch-darwin-arm64.tar.gz
+tar xzf dns-switch-darwin-arm64.tar.gz
+sudo mv dns-switch-darwin-arm64 /usr/local/bin/dns-switch
+sudo chmod +x /usr/local/bin/dns-switch
+```
+
+**macOS (Intel):**
+```bash
+curl -LO https://github.com/pinaka-io/dns-switch/releases/latest/download/dns-switch-darwin-amd64.tar.gz
+tar xzf dns-switch-darwin-amd64.tar.gz
+sudo mv dns-switch-darwin-amd64 /usr/local/bin/dns-switch
+sudo chmod +x /usr/local/bin/dns-switch
+```
+
+See the [releases page](https://github.com/pinaka-io/dns-switch/releases) for other platforms (Linux arm64) and checksums.
+
+### Development
+
+```bash
+git clone https://github.com/pinaka-io/dns-switch.git
+cd dns-switch
+go mod download
+go run .
 ```
 
 ## Configuration
 
-Edit `config.yaml` to add or modify DNS profiles:
+Create or edit `~/.config/dns-switch/config.yaml` (or use `config.yaml` in the current directory):
 
 ```yaml
 dns_profiles:
@@ -75,11 +105,14 @@ dns_profiles:
 
 ### Configuration Options
 
-- `name`: Display name for the profile
+- `name`: Display name for the profile (profiles are sorted alphabetically by name)
 - `description`: Brief description of the DNS provider
 - `primary`: Primary DNS server IP
 - `secondary`: Secondary DNS server IP (optional)
 - Use `"auto"` for both primary and secondary to use DHCP
+- `network_interface`: Pre-select a network interface (optional)
+
+**Note:** Profiles are automatically sorted alphabetically by name for consistent display.
 
 ## Usage
 
@@ -90,19 +123,21 @@ sudo dns-switch
 
 ### Keyboard Shortcuts
 
-- **Arrow Keys / Mouse**: Navigate through DNS profiles
-- **Enter / Apply Button**: Apply selected DNS profile
+- **Arrow Keys / j/k**: Navigate through options
+- **Enter**: Apply selected DNS profile / Select interface
+- **c**: Check current DNS configuration
 - **i**: Change network interface
 - **r**: Refresh configuration
-- **q**: Quit application
+- **q / Ctrl+C**: Quit application
+- **Esc**: Back to interface selection (from profile list) / Quit (from interface selection)
 
 ### Steps to Switch DNS
 
-1. Launch the application
+1. Launch the application: `sudo dns-switch`
 2. Select your network interface (if not already configured)
-3. Use arrow keys or mouse to select a DNS profile
-4. Press Enter or click "Apply DNS" button
-5. Wait for confirmation message
+3. Use arrow keys (`↑/↓` or `j/k`) to select a DNS profile
+4. Press `Enter` to apply the DNS profile
+5. Check the status bar for confirmation message (green = success, red = error)
 
 ## Permissions
 
@@ -142,7 +177,7 @@ USERNAME ALL=(ALL) NOPASSWD: /usr/bin/nmcli
 
 ## Adding Custom DNS Profiles
 
-Edit `config.yaml` and add your profile:
+Edit your configuration file (`~/.config/dns-switch/config.yaml` or `config.yaml`) and add your profile:
 
 ```yaml
 dns_profiles:
@@ -153,12 +188,81 @@ dns_profiles:
     secondary: "10.0.0.2"
 ```
 
-Then restart the application or press `r` to refresh.
+Then restart the application or press `r` to refresh. Your new profile will appear in alphabetical order by name.
+
+## Project Structure
+
+```
+dns-switch/
+├── cmd/dns-switch/      # Main application entry point
+├── internal/
+│   ├── config/          # Configuration management
+│   ├── dns/             # DNS operations
+│   └── tui/             # Terminal UI (Bubble Tea)
+├── config.yaml          # Example configuration
+└── Taskfile.yaml        # Build tasks
+```
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed architecture documentation.
+
+## Development
+
+### Building
+
+```bash
+# Download dependencies
+task deps
+
+# Build the binary
+task build
+
+# Run directly
+task run
+```
+
+### Available Tasks
+
+```bash
+task              # Show all available tasks
+task build        # Build the binary
+task install      # Install to /usr/local/bin
+task run          # Build and run
+task clean        # Clean build artifacts
+task test         # Run tests
+task fmt          # Format code
+task vet          # Run go vet
+task deps         # Update dependencies
+task check        # Run all checks (fmt, vet, test)
+```
+
+## Contributing
+
+Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+### Quick Start for Contributors
+
+1. Fork and clone the repository
+2. Install Task: `brew install go-task`
+3. Build: `task build`
+4. Test: `task test`
+5. Format: `task fmt`
+6. Submit PR
+
+## Releases
+
+Releases are automatically built and published via GitHub Actions when a new tag is pushed:
+
+```bash
+git tag -a v2.1.0 -m "Release v2.1.0"
+git push origin v2.1.0
+```
+
+This will trigger the release workflow which builds binaries for:
+- Linux (amd64, arm64)
+- macOS (amd64, arm64)
+
+See [CHANGELOG.md](CHANGELOG.md) for release history.
 
 ## License
 
 MIT License - feel free to use and modify as needed!
-
-## Contributing
-
-Contributions welcome! Feel free to submit issues or pull requests.

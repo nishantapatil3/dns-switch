@@ -1,35 +1,15 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
+# Go binaries
+dns-switch
+*.exe
+*.exe~
+*.dll
 *.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-pip-wheel-metadata/
-*.manifest
-*.spec
+*.dylib
 
-# PyPI
-.pypirc
-
-# Virtual Environment
-venv/
-env/
-ENV/
+# Go test files
+*.test
+*.out
+go.work
 
 # IDE
 .vscode/
