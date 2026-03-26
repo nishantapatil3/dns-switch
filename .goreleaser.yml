@@ -70,9 +70,9 @@ brews:
     test: |
       system "#{bin}/dns-switch --version"
     post_install: |
-      config_dir = HOMEBREW_PREFIX/"config/dns-switch"
+      config_dir = Pathname.new(ENV["HOME"]).join(".config", "dns-switch")
       config_dir.mkpath
-      config_file = config_dir/"config.yaml"
+      config_file = config_dir.join("config.yaml")
       unless config_file.exist?
         File.write(config_file, <<~EOS)
           # DNS Switch Configuration
