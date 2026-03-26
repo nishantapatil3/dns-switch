@@ -133,17 +133,28 @@ func createDefaultConfig(path string) error {
 	return nil
 }
 
-// GetProfiles returns a slice of DNS profiles sorted alphabetically by name
+// GetProfiles returns a slice of DNS profiles with DHCP first, then the rest sorted alphabetically by name
 func (c *Config) GetProfiles() []DNSProfile {
-	profiles := make([]DNSProfile, 0, len(c.DNSProfiles))
+	var dhcpProfile DNSProfile
+	profiles := make([]DNSProfile, 0, len(c.DNSProfiles)-1)
+
 	for _, profile := range c.DNSProfiles {
-		profiles = append(profiles, profile)
+		if profile.Key == "dhcp" {
+			dhcpProfile = profile
+		} else {
+			profiles = append(profiles, profile)
+		}
 	}
 
-	// Sort profiles alphabetically by name for consistent display
+	// Sort non-DHCP profiles alphabetically by name for consistent display
 	sort.Slice(profiles, func(i, j int) bool {
 		return profiles[i].Name < profiles[j].Name
 	})
+
+	// Put DHCP at the top
+	if dhcpProfile.Key != "" {
+		profiles = append([]DNSProfile{dhcpProfile}, profiles...)
+	}
 
 	return profiles
 }
