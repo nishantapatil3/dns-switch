@@ -21,7 +21,7 @@ A fast, user-friendly Terminal User Interface (TUI) for quickly switching betwee
 
 ```bash
 # Add the tap
-brew tap pinaka-io/tap
+brew tap nishantapatil3/homebrew-tap
 
 # Install dns-switch
 brew install dns-switch
@@ -33,7 +33,7 @@ sudo dns-switch
 ### Using Go Install
 
 ```bash
-go install github.com/pinaka-io/dns-switch@latest
+go install github.com/nishantapatil3/dns-switch@latest
 
 # Run
 sudo dns-switch
@@ -42,7 +42,7 @@ sudo dns-switch
 ### Build from Source
 
 ```bash
-git clone https://github.com/pinaka-io/dns-switch.git
+git clone https://github.com/nishantapatil3/dns-switch.git
 cd dns-switch
 
 # Using Task (recommended)
@@ -59,11 +59,11 @@ task run
 
 ### Download Binary
 
-Download the latest binary from the [releases page](https://github.com/pinaka-io/dns-switch/releases):
+Download the latest binary from the [releases page](https://github.com/nishantapatil3/dns-switch/releases):
 
 **Linux (amd64):**
 ```bash
-curl -LO https://github.com/pinaka-io/dns-switch/releases/latest/download/dns-switch-linux-amd64.tar.gz
+curl -LO https://github.com/nishantapatil3/dns-switch/releases/latest/download/dns-switch-linux-amd64.tar.gz
 tar xzf dns-switch-linux-amd64.tar.gz
 sudo mv dns-switch-linux-amd64 /usr/local/bin/dns-switch
 sudo chmod +x /usr/local/bin/dns-switch
@@ -71,7 +71,7 @@ sudo chmod +x /usr/local/bin/dns-switch
 
 **macOS (Apple Silicon):**
 ```bash
-curl -LO https://github.com/pinaka-io/dns-switch/releases/latest/download/dns-switch-darwin-arm64.tar.gz
+curl -LO https://github.com/nishantapatil3/dns-switch/releases/latest/download/dns-switch-darwin-arm64.tar.gz
 tar xzf dns-switch-darwin-arm64.tar.gz
 sudo mv dns-switch-darwin-arm64 /usr/local/bin/dns-switch
 sudo chmod +x /usr/local/bin/dns-switch
@@ -79,19 +79,19 @@ sudo chmod +x /usr/local/bin/dns-switch
 
 **macOS (Intel):**
 ```bash
-curl -LO https://github.com/pinaka-io/dns-switch/releases/latest/download/dns-switch-darwin-amd64.tar.gz
+curl -LO https://github.com/nishantapatil3/dns-switch/releases/latest/download/dns-switch-darwin-amd64.tar.gz
 tar xzf dns-switch-darwin-amd64.tar.gz
 sudo mv dns-switch-darwin-amd64 /usr/local/bin/dns-switch
 sudo chmod +x /usr/local/bin/dns-switch
 ```
 
 **Other platforms:**
-See the [releases page](https://github.com/pinaka-io/dns-switch/releases) for Linux arm64 and checksums.
+See the [releases page](https://github.com/nishantapatil3/dns-switch/releases) for Linux arm64 and checksums.
 
 ### Development
 
 ```bash
-git clone https://github.com/pinaka-io/dns-switch.git
+git clone https://github.com/nishantapatil3/dns-switch.git
 cd dns-switch
 go mod download
 go run .
